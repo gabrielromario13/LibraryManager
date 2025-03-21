@@ -1,0 +1,29 @@
+@LibraryManager.API_HostAddress = http://localhost:5002
+@LibraryManager = variable value
+@LibraryManager_HostAddress = "http://localhost:5002"
+
+GET {{LibraryManager.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+POST {{LibraryManager_HostAddress}}/users
+Content-Type: application/json
+
+{
+  "name": "Admin",
+  "email": "admin@admin.com",
+  "password": "admin"
+}
+#
+#GET {{LibraryManager_HostAddress}}/todoitems
+#
+#GET {{LibraryManager_HostAddress}}/todoitems/1
+#
+#PUT {{LibraryManager_HostAddress}}/todoitems/1
+#Content-Type: application/json
+#
+#{
+#  "name": "Walk the dog",
+#  "isComplete": true
+#}
+#
+#DELETE {{LibraryManager_HostAddress}}/todoitems/1
