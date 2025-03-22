@@ -68,7 +68,10 @@ ScaffoldingReadMe.txt
 # StyleCop
 StyleCopReport.xml
 
-# Files built by Visual Studio
+# JetBrains Rider Files
+*.idea
+
+# Visual Studio Files
 *_i.c
 *_p.c
 *_h.h
