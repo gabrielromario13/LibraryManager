@@ -8,8 +8,7 @@ public class LoanViewModel(
     string userName,
     int idBook,
     string bookTitle,
-    DateTime loanDate,
-    DateTime returnDate)
+    DateTime loanDate)
 {
     public int Id { get; private set; } = id;
     public int IdUser { get; private set; } = idUser;
@@ -17,8 +16,7 @@ public class LoanViewModel(
     public int IdBook { get; private set; } = idBook;
     public string BookTitle { get; private set; } = bookTitle;
     public DateTime LoanDate { get; private set; } = loanDate;
-    public DateTime ReturnDate { get; private set; } = returnDate;
 
     public static LoanViewModel FromEntity(Loan loan)
-        => new(loan.Id, loan.UserId, loan.User.Name, loan.BookId, loan.Book.Title, loan.LoanDate, loan.ReturnDate);
+        => new(loan.Id, loan.UserId, loan.User.Name, loan.BookId, loan.Book.Title, loan.LoanDate);
 }

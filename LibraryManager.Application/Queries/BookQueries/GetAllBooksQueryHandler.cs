@@ -5,18 +5,18 @@ using MediatR;
 namespace LibraryManager.Application.Queries.BookQueries;
 
 public class GetAllBooksQueryHandler(IBookRepository repository)
-    : IRequestHandler<GetAllBooksQuery, ResultViewModel<List<BookItemViewModel>>>
+    : IRequestHandler<GetAllBooksQuery, ResultViewModel<List<BookViewModel>>>
 {
-    public async Task<ResultViewModel<List<BookItemViewModel>>> Handle(
+    public async Task<ResultViewModel<List<BookViewModel>>> Handle(
         GetAllBooksQuery request, CancellationToken cancellationToken)
     {
         var books = await repository.Get(x => x.IsActive);
 
         if (!books.Any())
-            return ResultViewModel<List<BookItemViewModel>>.Error("Nenhum livro encontrado.");
+            return ResultViewModel<List<BookViewModel>>.Error("Nenhum livro encontrado.");
         
-        var model = books.Select(BookItemViewModel.FromEntity).ToList();
+        var model = books.Select(BookViewModel.FromEntity).ToList();
 
-        return ResultViewModel<List<BookItemViewModel>>.Success(model);
+        return ResultViewModel<List<BookViewModel>>.Success(model);
     }
 }

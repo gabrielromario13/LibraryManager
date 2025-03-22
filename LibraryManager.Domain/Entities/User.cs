@@ -13,15 +13,11 @@ public class User(string name, string email, string password) : BaseEntity
     public ICollection<Penalty> Penalties { get; set; } = null!;
     public ICollection<Reservation> Reservations { get; set; } = null!;
     
-
     public void Update(string name, string email)
     {
         Name = name;
         Email = email;
     }
         
-    public void UpdatePassword(string  newPassword)
-    {
-        Password = newPassword;
-    }
+    public void UpdatePassword(string  newPassword) => Password = newPassword;
 }

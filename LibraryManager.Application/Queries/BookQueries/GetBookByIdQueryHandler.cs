@@ -15,13 +15,12 @@ public class GetBookByIdQueryHandler(IBookRepository repository)
         {
             c => c.Loans
         };
-        
         var books = await repository.GetSingle(b => b.Id == request.Id && b.IsActive, includeProperties);
-
         if (books is null)
             return ResultViewModel<BookViewModel>.Error("Livro não encontrado.");
         
         var model = BookViewModel.FromEntity(books);
+        
         return ResultViewModel<BookViewModel>.Success(model);
     }
 }

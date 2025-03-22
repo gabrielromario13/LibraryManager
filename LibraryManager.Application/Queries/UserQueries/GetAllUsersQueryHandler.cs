@@ -18,7 +18,6 @@ public class GetAllUsersQueryHandler(IUserRepository repository)
             x => x.Loans
         };
         var user = await repository.Get(includeProperties: includeProperties);
-
         if (user is null)
             return ResultViewModel<List<UserViewModel>>.Error("Nenhum usuário cadastrado.");
 

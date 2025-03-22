@@ -2,6 +2,7 @@ using LibraryManager.Application.Commands.BookCommands;
 using LibraryManager.Application.Queries.BookQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace LibraryManager.API.Controllers;
 
@@ -10,58 +11,53 @@ namespace LibraryManager.API.Controllers;
 public class BooksController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Post(InsertBookCommand command)
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Create(InsertBookCommand command)
     {
         var result = await mediator.Send(command);
 
-        if (!result.IsSuccess)
-            return BadRequest(result.Message);
-
-        return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
+        return !result.IsSuccess
+            ? BadRequest(result.Message)
+            : Created($"{Request.Path}/{result.Data}", string.Empty);
     }
-    
+
     [HttpGet("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetById(int id)
     {
         var result = await mediator.Send(new GetBookByIdQuery(id));
 
-        if (!result.IsSuccess)
-            return BadRequest(result.Message);
-
-        return Ok(result);
+        return !result.IsSuccess
+            ? NotFound(result.Message)
+            : Ok(result);
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
-    {
-        var query = new GetAllBooksQuery();
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAll() =>
+        Ok(await mediator.Send(new GetAllBooksQuery()));
 
-        var result = await mediator.Send(query);
-        
-        return Ok(result);
-    }
-
-    [HttpPut]
-    // [HttpPut("{id:int}")]
-    public async Task<IActionResult> Put(/*int id, */UpdateBookCommand command)
+    [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> Update(int id, UpdateBookCommand command)
     {
+        command.Id = id;
+
         var result = await mediator.Send(command);
-        
-        if (!result.IsSuccess)
-            return BadRequest(result.Message);
-        
-        return NoContent();
-    }
 
+        return !result.IsSuccess
+            ? BadRequest(result.Message)
+            : NoContent();
+    }
 
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete(int id)
     {
-        var result = await mediator.Send(new DeleteBookCommand(id));
-        
-        if (!result.IsSuccess)
-            return BadRequest(result.Message);
-
+        await mediator.Send(new DeleteBookCommand(id));
         return NoContent();
     }
 }

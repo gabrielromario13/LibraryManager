@@ -1,25 +1,24 @@
+using LibraryManager.Application.Commands.LoginCommands;
 using LibraryManager.Application.Commands.UserCommands;
+using LibraryManager.Application.Commands.UserCommands.PutPasswordRecovery;
 using LibraryManager.Application.Queries.UserQueries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManager.API.Controllers
 {
-    [Route("api/user")]
+    [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
     public class UsersController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
-        // [AllowAnonymous]
-        public async Task<IActionResult> Post(InsertUserCommand command)
+        public async Task<IActionResult> Create(InsertUserCommand command)
         {
             var result = await mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
         }
 
         [HttpGet("{id:int}")]
-        // [Authorize(Roles = "admin,user")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await mediator.Send(new GetUserByIdQuery(id));
@@ -28,9 +27,8 @@ namespace LibraryManager.API.Controllers
 
             return Ok(result);
         }
-        
+
         [HttpGet]
-        // [Authorize(Roles = "admin")]
         public async Task<IActionResult> GetAll()
         {
             var query = new GetAllUsersQuery();
@@ -38,82 +36,75 @@ namespace LibraryManager.API.Controllers
             return Ok(result);
         }
 
-        // [HttpPut("{id:int}")]
-        // public async Task<IActionResult> Put(int id, UpdateUserCommand command)
-        // {
-        //     var result = await _mediator.Send(command);
-        //     if (!result.IsSuccess)
-        //     {
-        //         return BadRequest(result.Message);
-        //     }
-        //
-        //     return NoContent();
-        // }
-        //
-        // [HttpDelete("{id:int}")]
-        // // [Authorize(Roles = "admin")]
-        // public async Task<IActionResult> Delete(int id)
-        // {
-        //     var result = await _mediator.Send(new DeleteUserCommand(id));
-        //     if (!result.IsSuccess)
-        //     {
-        //         return BadRequest(result.Message);
-        //     }
-        //
-        //     return NoContent();
-        // }
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Update(int id, UpdateUserCommand command)
+        {
+            var result = await mediator.Send(command);
 
-        // [HttpPut("login")]
-        // [AllowAnonymous]
-        // public async Task<IActionResult> Login(InsertLoginCommand command)
-        // {
-        //     var result = await _mediator.Send(command);
-        //
-        //     if (!result.IsSuccess)
-        //     {
-        //         return Unauthorized(new { message = result.Message });
-        //     }
-        //
-        //     return Ok(new { token = result.Data });
-        // }
-        //
-        // [HttpPost("password-recovery/request")]
-        // [Authorize(Roles = "user")]
-        // public async Task<IActionResult> RequestPasswordRecovery(PasswordRecoveryRequestCommand command)
-        // {
-        //     var result = await _mediator.Send(command);
-        //     if (!result.IsSuccess)
-        //     {
-        //         return BadRequest(result.Message);
-        //     }
-        //
-        //     return Ok();
-        // }
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : NoContent();
+        }
 
-        // [HttpPost("password-recovery/validation")]
-        // [Authorize(Roles = "user")]
-        // public async Task<IActionResult> RequestPasswordRecovery(PasswordRecoveryValidateCommand command)
-        // {
-        //     var result = await _mediator.Send(command);
-        //     if (!result.IsSuccess)
-        //     {
-        //         return BadRequest(result.Message);
-        //     }
-        //
-        //     return Ok();
-        // }
-        //
-        // [HttpPost("password-recovery/change")]
-        // [Authorize(Roles = "user")]
-        // public async Task<IActionResult> RequestPasswordRecovery(PasswordRecoveryChangeCommand command)
-        // {
-        //     var result = await _mediator.Send(command);
-        //     if (!result.IsSuccess)
-        //     {
-        //         return BadRequest(result.Message);
-        //     }
-        //
-        //     return Ok();
-        // }
+        [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await mediator.Send(new DeleteUserCommand(id));
+            return NoContent();
+        }
+
+        [HttpPut("login")]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> Login(InsertLoginCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return !result.IsSuccess
+                ? Unauthorized(new { message = result.Message })
+                : Ok(new { token = result.Data });
+        }
+
+        [HttpPost("password-recovery/request")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> RequestPasswordRecovery(
+            PasswordRecoveryRequestCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : Ok();
+        }
+
+        [HttpPost("password-recovery/validation")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> RequestPasswordRecovery(
+            PasswordRecoveryValidateCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : Ok();
+        }
+
+        [HttpPost("password-recovery/change")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> RequestPasswordRecovery(
+            PasswordRecoveryChangeCommand command)
+        {
+            var result = await mediator.Send(command);
+
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : Ok();
+        }
     }
 }

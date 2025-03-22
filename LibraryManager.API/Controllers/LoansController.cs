@@ -5,45 +5,44 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryManager.API.Controllers
 {
-    [Route("api/loans")]
+    [Route("api/[controller]")]
     [ApiController]
     public class LoansController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(InsertLoanCommand command)
         {
             var result = await mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : Created($"{Request.Path}/{result.Data}", string.Empty);
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await mediator.Send(new GetLoanByIdQuery(id));
-            if (!result.IsSuccess)
-                return BadRequest(result.Message);
-
-            return Ok(result);
+            
+            return !result.IsSuccess
+                ? NotFound(result.Message)
+                : Ok(result);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var query = new GetAllLoansQuery();
-
-            var result = await mediator.Send(query);
-
-            return Ok(result);
-        }
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAll() =>
+            Ok(await mediator.Send(new GetAllLoansQuery()));
 
         [HttpDelete("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await mediator.Send(new DeleteLoanCommand(id));
-            if (!result.IsSuccess)
-                return BadRequest(result.Message);
-
+            await mediator.Send(new DeleteLoanCommand(id));
             return NoContent();
         }
     }

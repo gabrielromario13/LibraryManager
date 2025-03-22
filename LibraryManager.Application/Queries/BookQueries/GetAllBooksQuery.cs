@@ -3,4 +3,4 @@ using MediatR;
 
 namespace LibraryManager.Application.Queries.BookQueries;
 
-public class GetAllBooksQuery : IRequest<ResultViewModel<List<BookItemViewModel>>>;
+public class GetAllBooksQuery : IRequest<ResultViewModel<List<BookViewModel>>>;
