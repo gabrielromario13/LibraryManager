@@ -7,7 +7,9 @@ namespace LibraryManager.Application.Commands.BookCommands;
 public class DeleteBookCommandHandler(IBookRepository repository)
     : IRequestHandler<DeleteBookCommand, ResultViewModel>
 {
-    public async Task<ResultViewModel> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+    public async Task<ResultViewModel> Handle(
+        DeleteBookCommand request,
+        CancellationToken cancellationToken)
     {
         var book = await repository.GetById(request.Id);
         if (book is null)

@@ -22,23 +22,14 @@ public class BaseRepository<T>(DbContext context)
         await context.SaveChangesAsync();
     }
 
-    public async Task Remove(T aggregateRoot)
-    {
-        var result = await _dbSet
-            .FirstOrDefaultAsync(c => c.Id == aggregateRoot.Id);
-
-        if (result is not null)
-            _dbSet.Remove(result);
-    }
-
     public async Task<T?> GetById(int id) =>
-        await _dbSet.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id && x.IsActive);
+        await _dbSet.AsNoTracking().FirstOrDefaultAsync(t => t.Id == id && t.IsActive);
     
     public async Task<T?> GetSingle(
         Expression<Func<T, bool>> predicate = null!,
         IEnumerable<Expression<Func<T, object>>> includeProperties = null!)
     {
-        var query = _dbSet.AsNoTracking();
+        var query = _dbSet.AsNoTracking().Where(t => t.IsActive);
 
         if (predicate is not null)
             query = query.Where(predicate);
@@ -52,10 +43,10 @@ public class BaseRepository<T>(DbContext context)
         return await query.FirstOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null!,
+    public virtual async Task<IEnumerable<T>> Get(Expression<Func<T, bool>> predicate = null!,
         IEnumerable<Expression<Func<T, object>>> includeProperties = null!)
     {
-        var query = _dbSet.AsNoTracking();
+        var query = _dbSet.AsNoTracking().Where(t => t.IsActive);
         
         if (predicate is not null)
             query = query.Where(predicate);

@@ -18,7 +18,7 @@ namespace LibraryManager.API.Controllers
 
             return !result.IsSuccess
                 ? BadRequest(result.Message)
-                : Created($"{Request.Path}/{result.Data}", string.Empty);
+                : Created($"{Request.Path}/{result.Data}", command);
         }
 
         [HttpGet("{id:int}")]
@@ -27,7 +27,7 @@ namespace LibraryManager.API.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await mediator.Send(new GetLoanByIdQuery(id));
-            
+
             return !result.IsSuccess
                 ? NotFound(result.Message)
                 : Ok(result);
@@ -37,6 +37,18 @@ namespace LibraryManager.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll() =>
             Ok(await mediator.Send(new GetAllLoansQuery()));
+
+        [HttpPut("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpdateReturnDate(int id)
+        {
+            var result = await mediator.Send(new UpdateLoanCommand(id));
+
+            return !result.IsSuccess
+                ? BadRequest(result.Message)
+                : NoContent();
+        }
 
         [HttpDelete("{id:int}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]

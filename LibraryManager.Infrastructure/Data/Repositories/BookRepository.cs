@@ -5,7 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Infrastructure.Data.Repositories;
 
-public class BookRepository(AppDbContext context) : BaseRepository<Book>(context), IBookRepository
+public class BookRepository(AppDbContext context)
+    : BaseRepository<Book>(context), IBookRepository
 {
     public async Task<Book?> GetDetailsById(int id)
     {

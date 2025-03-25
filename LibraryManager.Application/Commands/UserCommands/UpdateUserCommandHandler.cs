@@ -9,7 +9,7 @@ public class UpdateUserCommandHandler(IUserRepository repository)
 {
     public async Task<ResultViewModel> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await repository.GetById(request.UserId);
+        var user = await repository.GetById(request.Id);
         if (user is null)
             return ResultViewModel.Error("Usuário não encontrado.");
 

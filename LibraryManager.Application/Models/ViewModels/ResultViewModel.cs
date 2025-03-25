@@ -20,6 +20,6 @@ public class ResultViewModel<T>(T? data, bool isSuccess = true, string message =
     public static ResultViewModel<T> Success(T data)
         => new(data);
 
-    public static ResultViewModel<T> Error(string message)
+    public new static ResultViewModel<T> Error(string message)
         => new(default, false, message);
 }

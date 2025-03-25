@@ -10,13 +10,11 @@ public class GetAllBooksQueryHandler(IBookRepository repository)
     public async Task<ResultViewModel<List<BookViewModel>>> Handle(
         GetAllBooksQuery request, CancellationToken cancellationToken)
     {
-        var books = await repository.Get(x => x.IsActive);
+        var books = await repository.Get();
 
-        if (!books.Any())
-            return ResultViewModel<List<BookViewModel>>.Error("Nenhum livro encontrado.");
-        
-        var model = books.Select(BookViewModel.FromEntity).ToList();
-
-        return ResultViewModel<List<BookViewModel>>.Success(model);
+        return !books.Any()
+            ? ResultViewModel<List<BookViewModel>>.Error("Nenhum livro encontrado.")
+            : ResultViewModel<List<BookViewModel>>.Success(
+                books.Select(BookViewModel.FromEntity).ToList());
     }
 }

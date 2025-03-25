@@ -15,6 +15,7 @@ public class UserViewModel(string name, string email, int id, List<string>? loan
             .Where(l => l.Book is not null && l.IsActive)
             .Select(loan => loan.Book.Title)
             .ToList();
+        
         return new(user.Name, user.Email, user.Id, loanedBooks);
     }
 }

@@ -9,14 +9,11 @@ namespace LibraryManager.Infrastructure.Data.Repositories;
 public class UserRepository(AppDbContext context, IAuthService auth)
     : BaseRepository<User>(context), IUserRepository
 {
-    public async Task<User?> GetDetailsById(int id)
-    {
-        var user = await context.Users
+    public async Task<User?> GetDetailsById(int id) =>
+        await context.Users
             .Include(u => u.Loans)
             .ThenInclude(l => l.Book)
             .SingleOrDefaultAsync(u => u.Id == id);
-        return user;
-    }
 
     public async Task UpdatePassword(User user, string newPassword)
     {

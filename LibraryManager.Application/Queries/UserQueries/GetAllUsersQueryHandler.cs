@@ -13,16 +13,10 @@ public class GetAllUsersQueryHandler(IUserRepository repository)
         GetAllUsersQuery request,
         CancellationToken cancellationToken)
     {
-        var includeProperties = new List<Expression<Func<Domain.Entities.User, object>>>()
-        {
-            x => x.Loans
-        };
-        var user = await repository.Get(includeProperties: includeProperties);
-        if (user is null)
-            return ResultViewModel<List<UserViewModel>>.Error("Nenhum usuário cadastrado.");
-
-        var model = user.Select(UserViewModel.FromEntity).ToList();
-
-        return ResultViewModel<List<UserViewModel>>.Success(model);
+        var user = await repository.Get();
+        
+        return user is null
+            ? ResultViewModel<List<UserViewModel>>.Error("Nenhum usuário cadastrado.")
+            : ResultViewModel<List<UserViewModel>>.Success(user.Select(UserViewModel.FromEntity).ToList());
     }
 }

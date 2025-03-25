@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Domain.Repositories;
 using MediatR;
@@ -11,18 +10,10 @@ public class GetLoanByIdQueryHandler(ILoanRepository repository)
     public async Task<ResultViewModel<LoanViewModel>> Handle(GetLoanByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var includeProperties = new List<Expression<Func<Domain.Entities.Loan, object>>>()
-        {
-            x => x.User,
-            x => x.Book
-        };
+        var loan = await repository.GetDetailsById(request.Id);
         
-        var loan = await repository.GetSingle(x => x.Id == request.Id, includeProperties);
-        
-        if (loan is null)
-            return ResultViewModel<LoanViewModel>.Error("Empréstimo não encontrado.");
-
-        var model = LoanViewModel.FromEntity(loan);
-        return ResultViewModel<LoanViewModel>.Success(model);
+        return loan is null
+            ? ResultViewModel<LoanViewModel>.Error("Empréstimo não encontrado.")
+            : ResultViewModel<LoanViewModel>.Success(LoanViewModel.FromEntity(loan));
     }
 }

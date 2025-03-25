@@ -2,12 +2,16 @@ using LibraryManager.Domain.Enums;
 
 namespace LibraryManager.Domain.Entities;
 
-public class User(string name, string email, string password) : BaseEntity
+public class User(
+    string name,
+    string email,
+    string password,
+    UserRoles role) : BaseEntity
 {
     public string Name { get; private set; } = name;
     public string Email { get; private set; } = email;
     public string Password { get; private set; } = password;
-    public UserRoles Role { get; private set; } = UserRoles.Reader;
+    public UserRoles Role { get; private set; } = role;
 
     public ICollection<Loan> Loans { get; set; } = null!;
     public ICollection<Penalty> Penalties { get; set; } = null!;

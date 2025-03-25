@@ -19,7 +19,7 @@ public class BooksController(IMediator mediator) : ControllerBase
 
         return !result.IsSuccess
             ? BadRequest(result.Message)
-            : Created($"{Request.Path}/{result.Data}", string.Empty);
+            : Created($"{Request.Path}/{result.Data}", command);
     }
 
     [HttpGet("{id:int}")]

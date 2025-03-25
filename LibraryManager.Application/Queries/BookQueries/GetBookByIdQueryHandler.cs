@@ -1,4 +1,3 @@
-using System.Linq.Expressions;
 using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Domain.Repositories;
 using MediatR;
@@ -11,16 +10,10 @@ public class GetBookByIdQueryHandler(IBookRepository repository)
     public async Task<ResultViewModel<BookViewModel>> Handle(GetBookByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var includeProperties = new List<Expression<Func<Domain.Entities.Book, object>>>()
-        {
-            c => c.Loans
-        };
-        var books = await repository.GetSingle(b => b.Id == request.Id && b.IsActive, includeProperties);
-        if (books is null)
-            return ResultViewModel<BookViewModel>.Error("Livro não encontrado.");
+        var books = await repository.GetDetailsById(request.Id);
         
-        var model = BookViewModel.FromEntity(books);
-        
-        return ResultViewModel<BookViewModel>.Success(model);
+        return books is null
+            ? ResultViewModel<BookViewModel>.Error("Livro não encontrado.")
+            : ResultViewModel<BookViewModel>.Success(BookViewModel.FromEntity(books));
     }
 }

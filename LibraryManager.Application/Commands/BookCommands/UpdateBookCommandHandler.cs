@@ -7,7 +7,8 @@ namespace LibraryManager.Application.Commands.BookCommands;
 public class UpdateBookCommandHandler(IBookRepository bookRepository)
     : IRequestHandler<UpdateBookCommand, ResultViewModel<int>>
 {
-    public async Task<ResultViewModel<int>> Handle(UpdateBookCommand request,
+    public async Task<ResultViewModel<int>> Handle(
+        UpdateBookCommand request,
         CancellationToken cancellationToken)
     {
         var book = await bookRepository.GetById(request.Id);

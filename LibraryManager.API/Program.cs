@@ -1,3 +1,4 @@
+using LibraryManager.API.ExceptionHandler;
 using LibraryManager.Application;
 using LibraryManager.Domain.Repositories;
 using LibraryManager.Infrastructure.Auth;
@@ -12,6 +13,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 // builder.Services.AddSwaggerGen(options =>
 // {
 //     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme

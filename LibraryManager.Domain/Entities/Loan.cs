@@ -12,13 +12,10 @@ public class Loan(
     public int BookId { get; private set; } = bookId;
     public DateTime LoanDate { get; private set; } = loanDate;
     public DateTime DueDate { get; private set; } = dueDate;
-    public DateTime? ReturnDate { get; private set; } = DateTime.UtcNow;
+    public DateTime? ReturnDate { get; private set; }
 
     public User User { get; set; } = null!;
     public Book Book { get; set; } = null!;
 
-    public void SetReturnDate(DateTime returnDate)
-    {
-        ReturnDate = returnDate;
-    }
+    public void SetReturnDate() => ReturnDate = DateTime.UtcNow;
 }
