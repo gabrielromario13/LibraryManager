@@ -3,7 +3,4 @@ using MediatR;
 
 namespace LibraryManager.Application.Queries.LoanQueries;
 
-public class GetAllLoansQuery : IRequest<ResultViewModel<List<LoanViewModel>>>
-{
-    
-}
+public class GetAllLoansQuery : IRequest<ResultViewModel<List<LoanViewModel>>>;

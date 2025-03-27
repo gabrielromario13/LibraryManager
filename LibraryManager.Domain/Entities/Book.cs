@@ -7,15 +7,14 @@ public class Book(
     string author,
     string isbn,
     int publishedYear,
-    int availableCopies = 1,
-    BookStatus status = BookStatus.Available) : BaseEntity
+    int availableCopies) : BaseEntity
 {
     public string Title { get; private set; } = title;
     public string Author { get; private set; } = author;
     public string Isbn { get; private set; } = isbn;
     public int PublishedYear { get; private set; } = publishedYear;
     public int AvailableCopies { get; private set; } = availableCopies;
-    public BookStatus Status { get; private set; } = status;
+    public BookStatus Status { get; private set; } = BookStatus.Available;
     
     public ICollection<Loan> Loans { get; set; } = null!;
     public ICollection<Reservation> Reservations { get; set; } = null!;

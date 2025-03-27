@@ -4,7 +4,7 @@ using MediatR;
 
 namespace LibraryManager.Application.Commands.BookCommands;
 
-public class ValidateCreateBookCommandBehavior(IBookRepository bookRepository)
+public class ValidateInsertBookCommandBehavior(IBookRepository bookRepository)
     : IPipelineBehavior<InsertBookCommand, ResultViewModel<int>>
 {
     public async Task<ResultViewModel<int>> Handle(

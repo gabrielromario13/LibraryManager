@@ -1,7 +1,10 @@
+using System.Text.Json.Serialization;
+
 namespace LibraryManager.Application.Models.ViewModels;
 
 public class ResultViewModel(bool isSuccess = true, string message = "")
 {
+    [JsonIgnore]
     public bool IsSuccess { get; private set; } = isSuccess;
     public string Message { get; private set; } = message;
 

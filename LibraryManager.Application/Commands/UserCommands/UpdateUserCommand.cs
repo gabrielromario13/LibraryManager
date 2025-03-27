@@ -1,6 +1,7 @@
 using LibraryManager.Application.Models.ViewModels;
 using MediatR;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using LibraryManager.Domain.Enums;
 
 namespace LibraryManager.Application.Commands.UserCommands;
 
@@ -10,4 +11,5 @@ public class UpdateUserCommand : IRequest<ResultViewModel>
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
+    public UserRoles Role { get; set; }
 }

@@ -7,6 +7,7 @@ public interface IBaseRepository<T> where T : BaseEntity
 {
     Task Add(T aggregateRoot);
     Task Update(T aggregateRoot);
+    Task Remove(T aggregateRoot);
     Task<T?> GetById(int id);
     Task<T?> GetSingle(Expression<Func<T, bool>> predicate = null!,
         IEnumerable<Expression<Func<T, object>>> includeProperties = null!);

@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 namespace LibraryManager.API.Controllers;
 
-[Route("api/Books")]
 [ApiController]
+[Route("api/[controller]")]
 public class BooksController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
@@ -18,8 +18,8 @@ public class BooksController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(command);
 
         return !result.IsSuccess
-            ? BadRequest(result.Message)
-            : Created($"{Request.Path}/{result.Data}", command);
+            ? BadRequest(result)
+            : Created($"{Request.Path}/{result.Data}", string.Empty);
     }
 
     [HttpGet("{id:int}")]
@@ -30,7 +30,7 @@ public class BooksController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(new GetBookByIdQuery(id));
 
         return !result.IsSuccess
-            ? NotFound(result.Message)
+            ? NotFound(result)
             : Ok(result);
     }
 
@@ -38,6 +38,11 @@ public class BooksController(IMediator mediator) : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAll() =>
         Ok(await mediator.Send(new GetAllBooksQuery()));
+    
+    [HttpGet("available")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetAllAvailable() =>
+        Ok(await mediator.Send(new GetAllAvailableBooksQuery()));
 
     [HttpPut("{id:int}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -49,7 +54,7 @@ public class BooksController(IMediator mediator) : ControllerBase
         var result = await mediator.Send(command);
 
         return !result.IsSuccess
-            ? BadRequest(result.Message)
+            ? BadRequest(result)
             : NoContent();
     }
 

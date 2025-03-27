@@ -4,7 +4,9 @@ using MediatR;
 
 namespace LibraryManager.Application.Commands.LoanCommands;
 
-public class UpdateLoanCommandHandler(ILoanRepository loanRepository,IBookRepository bookRepository)
+public class UpdateLoanCommandHandler(
+    ILoanRepository loanRepository,
+    IBookRepository bookRepository)
     : IRequestHandler<UpdateLoanCommand, ResultViewModel<int>>
 {
     public async Task<ResultViewModel<int>> Handle(

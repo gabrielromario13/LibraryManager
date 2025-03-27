@@ -8,7 +8,8 @@ public class GetAllBooksQueryHandler(IBookRepository repository)
     : IRequestHandler<GetAllBooksQuery, ResultViewModel<List<BookViewModel>>>
 {
     public async Task<ResultViewModel<List<BookViewModel>>> Handle(
-        GetAllBooksQuery request, CancellationToken cancellationToken)
+        GetAllBooksQuery request,
+        CancellationToken cancellationToken)
     {
         var books = await repository.Get();
 

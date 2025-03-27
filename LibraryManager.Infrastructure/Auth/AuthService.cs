@@ -17,9 +17,7 @@ public class AuthService(IConfiguration configuration) : IAuthService
         var builder = new StringBuilder();
 
         foreach (var t in hashedBytes)
-        {
             builder.Append(t.ToString("x2"));
-        }
 
         return builder.ToString();
     }
@@ -28,8 +26,8 @@ public class AuthService(IConfiguration configuration) : IAuthService
     {
         var issuer = configuration["Jwt:Issuer"];
         var audience = configuration["Jwt:Audience"];
-        var key = new SymmetricSecurityKey
-            (Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? string.Empty));
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(configuration["Jwt:Key"] ?? string.Empty));
 
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
         var claims = new[]
@@ -39,8 +37,14 @@ public class AuthService(IConfiguration configuration) : IAuthService
             new Claim(ClaimTypes.Role, role)
         };
 
-        var token = new JwtSecurityToken(issuer, audience, claims, null, DateTime.Now.AddHours(2),
-            signingCredentials: credentials);
+        var token = new JwtSecurityToken(
+            issuer,
+            audience,
+            claims,
+            null,
+            DateTime.Now.AddHours(2),
+            credentials);
+        
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

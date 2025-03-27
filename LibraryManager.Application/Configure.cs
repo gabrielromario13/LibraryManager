@@ -1,4 +1,5 @@
 using LibraryManager.Application.Commands.BookCommands;
+using LibraryManager.Application.Commands.UserCommands;
 using LibraryManager.Application.Models.ViewModels;
 using LibraryManager.Domain.Repositories;
 using LibraryManager.Infrastructure.Auth;
@@ -10,31 +11,33 @@ namespace LibraryManager.Application;
 
 public static class Configure
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static void AddApplication(this IServiceCollection services)
     {
         services
             .AddHandlers()
             .AddValidation();
-        return services;
     }
 
     private static IServiceCollection AddHandlers(this IServiceCollection services)
     {
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<UserValidationService>();
+        
         services.AddScoped<IBookRepository, BookRepository>();
         services.AddScoped<ILoanRepository, LoanRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IAuthService, AuthService>();
-
-        services.AddMediatR(config => config.RegisterServicesFromAssemblyContaining<InsertBookCommandHandler>());
+        services.AddScoped<IPenaltyRepository, PenaltyRepository>();
+        // services.AddScoped<IReservationRepository, ReservationRepository>();
+        
+        services.AddMediatR(config
+            => config.RegisterServicesFromAssemblyContaining<InsertBookCommandHandler>());
         
         return services;
     }
 
-    private static IServiceCollection AddValidation(this IServiceCollection services)
+    private static void AddValidation(this IServiceCollection services)
     {
         services.AddTransient<IPipelineBehavior<InsertBookCommand, ResultViewModel<int>>,
-            ValidateCreateBookCommandBehavior>();
-
-        return services;
+            ValidateInsertBookCommandBehavior>();
     }
 }

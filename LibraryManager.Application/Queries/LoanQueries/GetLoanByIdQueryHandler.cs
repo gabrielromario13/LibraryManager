@@ -10,7 +10,7 @@ public class GetLoanByIdQueryHandler(ILoanRepository repository)
     public async Task<ResultViewModel<LoanViewModel>> Handle(GetLoanByIdQuery request,
         CancellationToken cancellationToken)
     {
-        var loan = await repository.GetDetailsById(request.Id);
+        var loan = await repository.GetById(request.Id);
         
         return loan is null
             ? ResultViewModel<LoanViewModel>.Error("Empréstimo não encontrado.")

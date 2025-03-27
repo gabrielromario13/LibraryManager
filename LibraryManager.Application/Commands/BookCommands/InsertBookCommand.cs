@@ -9,7 +9,7 @@ public class InsertBookCommand : IRequest<ResultViewModel<int>>
     public string Author { get; set; } = string.Empty;
     public string Isbn { get; set; } = string.Empty;
     public int PublishedYear { get; set; }
-    public int AvailableCopies { get; set; }
+    public int AvailableCopies { get; set; } = 1;
 
     public Domain.Entities.Book ToEntity()
         => new(Title, Author, Isbn, PublishedYear, AvailableCopies);

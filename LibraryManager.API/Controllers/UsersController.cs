@@ -15,8 +15,8 @@ namespace LibraryManager.API.Controllers
             var result = await mediator.Send(command);
             
             return !result.IsSuccess
-                ? BadRequest(result.Message)
-                : Created($"{Request.Path}/{result.Data}", command);
+                ? BadRequest(result)
+                : Created($"{Request.Path}/{result.Data}", string.Empty);
         }
 
         [HttpGet("{id:int}")]
@@ -24,7 +24,7 @@ namespace LibraryManager.API.Controllers
         {
             var result = await mediator.Send(new GetUserByIdQuery(id));
             if (!result.IsSuccess)
-                return BadRequest(result.Message);
+                return BadRequest(result);
 
             return Ok(result);
         }
@@ -46,7 +46,7 @@ namespace LibraryManager.API.Controllers
             var result = await mediator.Send(command);
 
             return !result.IsSuccess
-                ? BadRequest(result.Message)
+                ? BadRequest(result)
                 : NoContent();
         }
 

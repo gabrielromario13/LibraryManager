@@ -16,12 +16,13 @@ public class User(
     public ICollection<Loan> Loans { get; set; } = null!;
     public ICollection<Penalty> Penalties { get; set; } = null!;
     public ICollection<Reservation> Reservations { get; set; } = null!;
-    
-    public void Update(string name, string email)
+
+    public void Update(string name, string email, UserRoles role)
     {
         Name = name;
         Email = email;
+        Role = role;
     }
-        
-    public void UpdatePassword(string  newPassword) => Password = newPassword;
+
+    public void UpdatePassword(string newPassword) => Password = newPassword;
 }

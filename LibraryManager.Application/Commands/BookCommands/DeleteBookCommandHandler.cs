@@ -15,7 +15,7 @@ public class DeleteBookCommandHandler(IBookRepository repository)
         if (book is null)
             return ResultViewModel.Error("Livro não encontrado.");
         
-        book.Available();
+        book.Deactivate();
         await repository.Update(book);
 
         return ResultViewModel.Success();

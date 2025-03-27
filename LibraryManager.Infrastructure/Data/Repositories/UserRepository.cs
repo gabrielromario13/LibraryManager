@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManager.Infrastructure.Data.Repositories;
 
-public class UserRepository(AppDbContext context, IAuthService auth)
+public class UserRepository(AppDbContext context)
     : BaseRepository<User>(context), IUserRepository
 {
     public async Task<User?> GetDetailsById(int id) =>
@@ -15,15 +15,6 @@ public class UserRepository(AppDbContext context, IAuthService auth)
             .ThenInclude(l => l.Book)
             .SingleOrDefaultAsync(u => u.Id == id);
 
-    public async Task UpdatePassword(User user, string newPassword)
-    {
-        user.UpdatePassword(newPassword);
-        await context.SaveChangesAsync();
-    }
-
-    public async Task<User?> AuthenticateUser(string email, string password)
-    {
-        var hashPassword = auth.ComputeHash(password);
-        return await context.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == hashPassword);
-    }
+    public async Task<bool> EmailExists(string email) =>
+        await context.Users.AnyAsync(u => u.Email == email);
 }
