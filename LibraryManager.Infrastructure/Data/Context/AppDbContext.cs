@@ -48,7 +48,7 @@ public sealed class AppDbContext : DbContext
             .Property(u => u.Role)
             .HasConversion<string>();
 
-        modelBuilder.Entity<Book>()
+        modelBuilder.Entity<Loan>()
             .Property(l => l.Status)
             .HasConversion<string>();
 

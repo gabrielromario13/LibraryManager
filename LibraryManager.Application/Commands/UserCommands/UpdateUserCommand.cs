@@ -11,5 +11,5 @@ public class UpdateUserCommand : IRequest<ResultViewModel>
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public UserRoles Role { get; set; }
+    public UserRole Role { get; set; }
 }

@@ -17,12 +17,19 @@ public class UpdateLoanCommandHandler(
         if (loan is null)
             return ResultViewModel<int>.Error("Empréstimo não encontrado.");
 
-        var book = (await bookRepository.GetById(loan.BookId))!;
-        book.Available();
-        await bookRepository.Update(book);
+        try
+        {
+            loan.SetReturnDate();
+            await loanRepository.Update(loan);
         
-        loan.SetReturnDate();
-        await loanRepository.Update(loan);
+            var book = (await bookRepository.GetById(loan.BookId))!;
+            book.DecrementAvailableCopies();
+            await bookRepository.Update(book);
+        }
+        catch
+        {
+            return ResultViewModel<int>.Error("Não foi possível retornar livro no momento.");
+        }
 
         return ResultViewModel<int>.Success(loan.Id);
     }

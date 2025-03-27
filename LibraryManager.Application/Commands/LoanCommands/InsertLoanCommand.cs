@@ -8,9 +8,9 @@ public class InsertLoanCommand : IRequest<ResultViewModel<int>>
 {
     public int UserId { get; set; }
     public int BookId { get; set; }
-    public DateTime LoanDate { get; set; }
+    public DateTime LoanDate { get; set; } = DateTime.UtcNow;
     public DateTime DueDate { get; set; }
 
     public Loan ToEntity()
-        => new(UserId, BookId, LoanDate.Date, DueDate.Date);
+        => new(UserId, BookId, LoanDate, DueDate);
 }

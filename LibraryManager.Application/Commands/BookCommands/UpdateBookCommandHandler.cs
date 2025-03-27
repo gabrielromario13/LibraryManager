@@ -15,7 +15,13 @@ public class UpdateBookCommandHandler(IBookRepository bookRepository)
         if (book is null)
             return ResultViewModel<int>.Error("Livro não encontrado.");
 
-        book.Update(request.Title, request.Author, request.Isbn, request.PublishedYear, request.AvailableCopies);
+        book.Update(
+            request.Title,
+            request.Author,
+            request.Isbn,
+            request.PublishedYear,
+            request.TotalCopies,
+            request.AvailableCopies);
         await bookRepository.Update(book);
 
         return ResultViewModel<int>.Success(book.Id);

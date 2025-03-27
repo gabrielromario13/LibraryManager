@@ -12,15 +12,9 @@ public class GetAllAvailableBooksQueryHandler(IBookRepository repository)
         GetAllAvailableBooksQuery request,
         CancellationToken cancellationToken)
     {
-        var books = await repository
-            .Get(b => b.Status == BookStatus.Available);
+        var books = await repository.Get(b => b.AvailableCopies > 0);
 
         return ResultViewModel<List<BookViewModel>>
             .Success(books.Select(BookViewModel.FromEntity).ToList());
-
-        // return !books.Any()
-        //     ? ResultViewModel<List<BookViewModel>>.Error("Nenhum livro disponível.")
-        //     : ResultViewModel<List<BookViewModel>>.Success(
-        //         books.Select(BookViewModel.FromEntity).ToList());
     }
 }

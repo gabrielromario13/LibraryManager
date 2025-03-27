@@ -16,7 +16,7 @@ public class DeleteLoanCommandHandler(ILoanRepository repository, IBookRepositor
         var book = await bookRepository.GetById(loan.BookId);
         if (book is not null)
         {
-            book.Available();
+            book.IncrementAvailableCopies();
             await bookRepository.Update(book);
         }
 

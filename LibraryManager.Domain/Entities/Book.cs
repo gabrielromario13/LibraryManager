@@ -7,48 +7,34 @@ public class Book(
     string author,
     string isbn,
     int publishedYear,
-    int availableCopies) : BaseEntity
+    short totalCopies) : BaseEntity
 {
     public string Title { get; private set; } = title;
     public string Author { get; private set; } = author;
     public string Isbn { get; private set; } = isbn;
     public int PublishedYear { get; private set; } = publishedYear;
-    public int AvailableCopies { get; private set; } = availableCopies;
-    public BookStatus Status { get; private set; } = BookStatus.Available;
+    public short TotalCopies { get; private set; } = totalCopies;
+    public short AvailableCopies { get; private set; } = totalCopies;
     
     public ICollection<Loan> Loans { get; set; } = null!;
     public ICollection<Reservation> Reservations { get; set; } = null!;
     
-    public void Update(string title, string author, string isbn, int publishedYear, int availableCopies)
+    public void Update(
+        string title,
+        string author,
+        string isbn,
+        int publishedYear,
+        short totalCopies,
+        short availableCopies)
     {
         Title = title;
         Author = author;
         Isbn = isbn;
         PublishedYear = publishedYear;
+        TotalCopies = totalCopies;
         AvailableCopies = availableCopies;
     }
     
-    public void Loaned()
-    {
-        if (Status is BookStatus.Available)
-            Status = BookStatus.Loaned;
-    }
-
-    public void Available()
-    {
-        if (Status is BookStatus.Loaned or BookStatus.Reserved)
-            Status = BookStatus.Available;
-    }
-
-    public void Reserved()
-    {
-        if (Status is BookStatus.Available)
-            Status = BookStatus.Reserved;
-    }
-
-    public void Unavailable()
-    {
-        if (Status is not BookStatus.Loaned)
-            Status = BookStatus.Unavailable;
-    }
+    public void IncrementAvailableCopies() => AvailableCopies++;
+    public void DecrementAvailableCopies() => AvailableCopies--;
 }
