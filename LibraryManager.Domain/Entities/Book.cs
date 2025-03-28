@@ -1,5 +1,3 @@
-using LibraryManager.Domain.Enums;
-
 namespace LibraryManager.Domain.Entities;
 
 public class Book(
@@ -15,10 +13,10 @@ public class Book(
     public int PublishedYear { get; private set; } = publishedYear;
     public short TotalCopies { get; private set; } = totalCopies;
     public short AvailableCopies { get; private set; } = totalCopies;
-    
+
     public ICollection<Loan> Loans { get; set; } = null!;
     public ICollection<Reservation> Reservations { get; set; } = null!;
-    
+
     public void Update(
         string title,
         string author,
@@ -34,7 +32,12 @@ public class Book(
         TotalCopies = totalCopies;
         AvailableCopies = availableCopies;
     }
-    
-    public void IncrementAvailableCopies() => AvailableCopies++;
+
+    public void IncrementAvailableCopies()
+    {
+        if (AvailableCopies < TotalCopies)
+            AvailableCopies++;
+    }
+
     public void DecrementAvailableCopies() => AvailableCopies--;
 }

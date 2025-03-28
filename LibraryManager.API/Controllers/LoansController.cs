@@ -52,14 +52,14 @@ namespace LibraryManager.API.Controllers
 
         [HttpPut("{id:int}/return")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> UpdateReturnDate(int id)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> FinishLoan(int id)
         {
             var result = await mediator.Send(new UpdateLoanCommand(id));
 
             return !result.IsSuccess
                 ? BadRequest(result)
-                : NoContent();
+                : Ok(result);
         }
 
         [HttpDelete("{id:int}")]

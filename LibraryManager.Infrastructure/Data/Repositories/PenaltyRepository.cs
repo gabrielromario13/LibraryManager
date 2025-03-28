@@ -21,4 +21,11 @@ public class PenaltyRepository(AppDbContext context)
             .Include(l => l.User)
             .Include(l => l.Loan)
             .ToListAsync();
+
+    public async Task<IEnumerable<Penalty>> GetAllByUser(int userId) =>
+        await context.Penalties
+            .Where(l => l.IsActive && l.Paid == false && l.UserId == userId)
+            .Include(l => l.Loan)
+            .ThenInclude(l => l.User)
+            .ToListAsync();
 }

@@ -17,6 +17,12 @@ public class Loan(
 
     public User User { get; set; } = null!;
     public Book Book { get; set; } = null!;
+
+    public void FinishLoan()
+    {
+        ReturnDate = DateTime.UtcNow;
+        Status = LoanStatus.Returned;
+    }
     
-    public void SetReturnDate() => ReturnDate = DateTime.UtcNow;
+    public void SetOverdue() => Status = LoanStatus.Overdue;
 }

@@ -13,14 +13,16 @@ public class InsertPenaltyCommandHandler(
         InsertPenaltyCommand request,
         CancellationToken cancellationToken)
     {
-        var loanExists = await loanRepository.Exists(l => l.Id == request.LoanId);
-        if (!loanExists)
+        var loan = await loanRepository.GetById(request.LoanId);
+        if (loan is null)
             return ResultViewModel<int>.Error("Empréstimo não encontrado.");
         
+        loan.SetOverdue();
+        await loanRepository.Update(loan);
+        
         var penalty = request.ToEntity();
-
         await penaltyRepository.Add(penalty);
-            
+        
         return ResultViewModel<int>.Success(penalty.Id);
     }
 }

@@ -9,13 +9,20 @@ namespace LibraryManager.Application.Commands.LoanCommands;
 
 public class InsertLoanCommandHandler(
     ILoanRepository repository,
-    IBookRepository bookRepository)
+    IBookRepository bookRepository,
+    IPenaltyRepository penaltyRepository)
     : IRequestHandler<InsertLoanCommand, ResultViewModel<int>>
 {
     public async Task<ResultViewModel<int>> Handle(
         InsertLoanCommand request,
         CancellationToken cancellationToken)
     {
+        var penalties = await penaltyRepository.GetAllByUser(request.UserId);
+        if (penalties.Any())
+            return ResultViewModel<int>.Error(
+                $"Empréstimo indisponível. Usuário possui penalidades " +
+                $"que somam o valor de R${penalties.Sum(p => p.Amount):C2}");
+        
         var book = await bookRepository
             .GetSingle(b => b.Id == request.BookId && b.AvailableCopies > 0);
 

@@ -6,4 +6,5 @@ public interface IPenaltyRepository : IBaseRepository<Penalty>
 {
     Task<Penalty?> GetDetailsById(int id);
     Task<IEnumerable<Penalty>> GetAll();
+    Task<IEnumerable<Penalty>> GetAllByUser(int userId);
 }

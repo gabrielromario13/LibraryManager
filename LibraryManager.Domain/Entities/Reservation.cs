@@ -10,4 +10,6 @@ public class Reservation(int userId, int bookId) : BaseEntity
 
     public User User { get; set; } = null!;
     public Book Book { get; set; } = null!;
+    
+    public void Reserved() => Status = ReservationStatus.Reserved;
 }

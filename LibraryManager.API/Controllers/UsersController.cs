@@ -10,6 +10,8 @@ namespace LibraryManager.API.Controllers
     public class UsersController(IMediator mediator) : ControllerBase
     {
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create(InsertUserCommand command)
         {
             var result = await mediator.Send(command);
@@ -20,16 +22,19 @@ namespace LibraryManager.API.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await mediator.Send(new GetUserByIdQuery(id));
-            if (!result.IsSuccess)
-                return BadRequest(result);
-
-            return Ok(result);
+            
+            return !result.IsSuccess
+                ? NotFound(result)
+                : Ok(result);
         }
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
         {
             var query = new GetAllUsersQuery();

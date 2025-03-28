@@ -27,7 +27,7 @@ public static class Configure
         services.AddScoped<ILoanRepository, LoanRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IPenaltyRepository, PenaltyRepository>();
-        // services.AddScoped<IReservationRepository, ReservationRepository>();
+        services.AddScoped<IReservationRepository, ReservationRepository>();
         
         services.AddMediatR(config
             => config.RegisterServicesFromAssemblyContaining<InsertBookCommandHandler>());
