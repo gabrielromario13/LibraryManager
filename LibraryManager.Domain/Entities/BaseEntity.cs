@@ -7,6 +7,8 @@ public abstract class BaseEntity
     public DateTime? UpdatedAt { get; set; }
     public bool IsActive { get; private set; } = true;
 
+    public void SetId(int id) => Id = id;
+
     public void Deactivate()
     {
         IsActive = false;
